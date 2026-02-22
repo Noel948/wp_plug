@@ -243,6 +243,27 @@ class Mega_Nav extends Widget_Base
             ]
         );
 
+        $this->add_responsive_control(
+            'item_padding',
+            [
+                'label' => esc_html__('Item Spacing', 'esnp-kit'),
+                'type' => Controls_Manager::DIMENSIONS,
+                'size_units' => ['px', 'em'],
+                'selectors' => [
+                    '{{WRAPPER}} .esnp-nav-item-link' => 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+                ],
+            ]
+        );
+
+        $this->start_controls_tabs('tabs_menu_item_style');
+
+        $this->start_controls_tab(
+            'tab_menu_item_normal',
+            [
+                'label' => esc_html__('Normal', 'esnp-kit'),
+            ]
+        );
+
         $this->add_control(
             'menu_text_color',
             [
@@ -251,6 +272,100 @@ class Mega_Nav extends Widget_Base
                 'selectors' => [
                     '{{WRAPPER}} .esnp-nav-item-link' => 'color: {{VALUE}};',
                 ],
+            ]
+        );
+
+        $this->add_group_control(
+            \Elementor\Group_Control_Typography::get_type(),
+            [
+                'name' => 'menu_typography',
+                'selector' => '{{WRAPPER}} .esnp-nav-item-link',
+            ]
+        );
+
+        $this->end_controls_tab();
+
+        $this->start_controls_tab(
+            'tab_menu_item_hover',
+            [
+                'label' => esc_html__('Hover', 'esnp-kit'),
+            ]
+        );
+
+        $this->add_control(
+            'menu_text_color_hover',
+            [
+                'label' => esc_html__('Text Color', 'esnp-kit'),
+                'type' => Controls_Manager::COLOR,
+                'selectors' => [
+                    '{{WRAPPER}} .esnp-nav-item:hover > .esnp-nav-item-link' => 'color: {{VALUE}};',
+                ],
+            ]
+        );
+
+        $this->add_control(
+            'menu_item_bg_hover',
+            [
+                'label' => esc_html__('Background Color', 'esnp-kit'),
+                'type' => Controls_Manager::COLOR,
+                'selectors' => [
+                    '{{WRAPPER}} .esnp-nav-item:hover > .esnp-nav-item-link' => 'background-color: {{VALUE}};',
+                ],
+            ]
+        );
+
+        $this->end_controls_tab();
+
+        $this->end_controls_tabs();
+
+        $this->end_controls_section();
+
+        $this->start_controls_section(
+            'section_style_dropdown',
+            [
+                'label' => esc_html__('Dropdown / Mega Menu', 'esnp-kit'),
+                'tab' => Controls_Manager::TAB_STYLE,
+            ]
+        );
+
+        $this->add_responsive_control(
+            'dropdown_width',
+            [
+                'label' => esc_html__('Dropdown Width (px)', 'esnp-kit'),
+                'type' => Controls_Manager::SLIDER,
+                'range' => [
+                    'px' => ['min' => 200, 'max' => 1200],
+                ],
+                'selectors' => [
+                    '{{WRAPPER}} .esnp-mega-dropdown' => 'width: {{SIZE}}{{UNIT}};',
+                ],
+            ]
+        );
+
+        $this->add_group_control(
+            \Elementor\Group_Control_Background::get_type(),
+            [
+                'name' => 'dropdown_background',
+                'selector' => '{{WRAPPER}} .esnp-mega-dropdown',
+            ]
+        );
+
+        $this->add_responsive_control(
+            'dropdown_padding',
+            [
+                'label' => esc_html__('Padding', 'esnp-kit'),
+                'type' => Controls_Manager::DIMENSIONS,
+                'selectors' => [
+                    '{{WRAPPER}} .esnp-mega-dropdown-inner' => 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+                ],
+            ]
+        );
+
+        $this->add_group_control(
+            \Elementor\Group_Control_Box_Shadow::get_type(),
+            [
+                'name' => 'dropdown_shadow',
+                'selector' => '{{WRAPPER}} .esnp-mega-dropdown',
             ]
         );
 
@@ -276,60 +391,60 @@ class Mega_Nav extends Widget_Base
             'id' => 'esnp-nav-' . $this->get_id(),
         ]);
         ?>
-                <div <?php echo $this->get_render_attribute_string('wrapper'); ?>>
-                    <div class="esnp-nav-container">
-                        <button class="esnp-mobile-toggle" data-target="esnp-nav-list-<?php echo $this->get_id(); ?>">
-                            <span class="esnp-toggle-bar"></span>
-                            <span class="esnp-toggle-bar"></span>
-                            <span class="esnp-toggle-bar"></span>
-                        </button>
+        <div <?php echo $this->get_render_attribute_string('wrapper'); ?>>
+            <div class="esnp-nav-container">
+                <button class="esnp-mobile-toggle" data-target="esnp-nav-list-<?php echo $this->get_id(); ?>">
+                    <span class="esnp-toggle-bar"></span>
+                    <span class="esnp-toggle-bar"></span>
+                    <span class="esnp-toggle-bar"></span>
+                </button>
 
-                        <nav class="esnp-nav-main" id="esnp-nav-list-<?php echo $this->get_id(); ?>">
-                            <ul class="esnp-nav-list">
-                                <?php foreach ($settings['menu_items'] as $item):
-                                    $is_mega = ('yes' === $item['is_mega']);
-                                    ?>
-                                        <li class="esnp-nav-item <?php echo $is_mega ? 'esnp-has-mega' : ''; ?>">
-                                            <a href="<?php echo esc_url($item['item_link']['url']); ?>" class="esnp-nav-item-link">
-                                                <?php echo esc_html($item['item_title']); ?>
-                                            </a>
-                                            <?php if ($is_mega && !empty($item['sub_menu_items'])): ?>
-                                                    <div class="esnp-mega-dropdown">
-                                                        <div class="esnp-mega-dropdown-inner">
-                                                            <ul class="esnp-sub-menu">
-                                                                <?php foreach ($item['sub_menu_items'] as $sub_item): ?>
-                                                                        <li class="esnp-sub-item">
-                                                                            <a href="<?php echo esc_url($sub_item['sub_item_link']['url']); ?>"
-                                                                                class="esnp-sub-link">
-                                                                                <?php echo esc_html($sub_item['sub_item_title']); ?>
-                                                                            </a>
-                                                                        </li>
-                                                                <?php endforeach; ?>
-                                                            </ul>
-                                                        </div>
-                                                    </div>
-                                            <?php endif; ?>
-                                        </li>
-                                <?php endforeach; ?>
-                            </ul>
-                        </nav>
-
-                        <?php if ('yes' === $settings['show_cart'] && class_exists('WooCommerce')): ?>
-                                <div class="esnp-nav-cart">
-                                    <a href="<?php echo esc_url(wc_get_cart_url()); ?>" class="esnp-nav-cart-toggle">
-                                        <span class="esnp-cart-icon">🛒</span>
-                                        <?php if ($settings['cart_style'] === 'icon_count'): ?>
-                                                <span class="esnp-cart-count"><?php echo WC()->cart->get_cart_contents_count(); ?></span>
-                                        <?php elseif ($settings['cart_style'] === 'icon_subtotal'): ?>
-                                                <span class="esnp-cart-subtotal"><?php echo WC()->cart->get_cart_subtotal(); ?></span>
-                                        <?php endif; ?>
-                                    </a>
-                                    <div class="esnp-mini-cart">
-                                        <?php woocommerce_mini_cart(); ?>
+                <nav class="esnp-nav-main" id="esnp-nav-list-<?php echo $this->get_id(); ?>">
+                    <ul class="esnp-nav-list">
+                        <?php foreach ($settings['menu_items'] as $item):
+                            $is_mega = ('yes' === $item['is_mega']);
+                            ?>
+                            <li class="esnp-nav-item <?php echo $is_mega ? 'esnp-has-mega' : ''; ?>">
+                                <a href="<?php echo esc_url($item['item_link']['url']); ?>" class="esnp-nav-item-link">
+                                    <?php echo esc_html($item['item_title']); ?>
+                                </a>
+                                <?php if ($is_mega && !empty($item['sub_menu_items'])): ?>
+                                    <div class="esnp-mega-dropdown">
+                                        <div class="esnp-mega-dropdown-inner">
+                                            <ul class="esnp-sub-menu">
+                                                <?php foreach ($item['sub_menu_items'] as $sub_item): ?>
+                                                    <li class="esnp-sub-item">
+                                                        <a href="<?php echo esc_url($sub_item['sub_item_link']['url']); ?>"
+                                                            class="esnp-sub-link">
+                                                            <?php echo esc_html($sub_item['sub_item_title']); ?>
+                                                        </a>
+                                                    </li>
+                                                <?php endforeach; ?>
+                                            </ul>
+                                        </div>
                                     </div>
-                                </div>
-                        <?php endif; ?>
+                                <?php endif; ?>
+                            </li>
+                        <?php endforeach; ?>
+                    </ul>
+                </nav>
+
+                <?php if ('yes' === $settings['show_cart'] && class_exists('WooCommerce')): ?>
+                    <div class="esnp-nav-cart">
+                        <a href="<?php echo esc_url(wc_get_cart_url()); ?>" class="esnp-nav-cart-toggle">
+                            <span class="esnp-cart-icon">🛒</span>
+                            <?php if ($settings['cart_style'] === 'icon_count'): ?>
+                                <span class="esnp-cart-count"><?php echo WC()->cart->get_cart_contents_count(); ?></span>
+                            <?php elseif ($settings['cart_style'] === 'icon_subtotal'): ?>
+                                <span class="esnp-cart-subtotal"><?php echo WC()->cart->get_cart_subtotal(); ?></span>
+                            <?php endif; ?>
+                        </a>
+                        <div class="esnp-mini-cart">
+                            <?php woocommerce_mini_cart(); ?>
+                        </div>
                     </div>
-                    <?php
+                <?php endif; ?>
+            </div>
+            <?php
     }
 }

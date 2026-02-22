@@ -58,6 +58,25 @@ class Loader
 
         // Initialize Design System
         Design_System::instance();
+
+        // Booking Submission
+        add_action('wp_ajax_esnp_booking_submit', [$this, 'booking_submit_handler']);
+        add_action('wp_ajax_nopriv_esnp_booking_submit', [$this, 'booking_submit_handler']);
+    }
+
+    public function booking_submit_handler()
+    {
+        $name = isset($_POST['name']) ? sanitize_text_field($_POST['name']) : '';
+        $email = isset($_POST['email']) ? sanitize_email($_POST['email']) : '';
+        $date = isset($_POST['date']) ? sanitize_text_field($_POST['date']) : '';
+        $time = isset($_POST['time']) ? sanitize_text_field($_POST['time']) : '';
+
+        if (!$name || !$email || !$date || !$time) {
+            wp_send_json_error(['message' => __('Please fill all fields.', 'esnp-kit')]);
+        }
+
+        // Simulate success
+        wp_send_json_success(['message' => sprintf(__('Thank you %s! Your booking for %s at %s is confirmed.', 'esnp-kit'), $name, $date, $time)]);
     }
 
     public function ajax_search_handler()
@@ -127,6 +146,7 @@ class Loader
         require_once(ESNP_PATH . 'widgets/class-table-of-contents.php');
         require_once(ESNP_PATH . 'widgets/class-progress-tracker.php');
         require_once(ESNP_PATH . 'widgets/class-accessibility-tools.php');
+        require_once(ESNP_PATH . 'widgets/class-booking.php');
 
         $widgets_manager->register(new \ESNP_Kit\Widgets\Mega_Nav());
         $widgets_manager->register(new \ESNP_Kit\Widgets\Container_Extender());
@@ -149,6 +169,7 @@ class Loader
         $widgets_manager->register(new \ESNP_Kit\Widgets\Table_Of_Contents());
         $widgets_manager->register(new \ESNP_Kit\Widgets\Progress_Tracker());
         $widgets_manager->register(new \ESNP_Kit\Widgets\Accessibility_Tools());
+        $widgets_manager->register(new \ESNP_Kit\Widgets\Booking_Widget());
     }
 
     public function enqueue_styles()

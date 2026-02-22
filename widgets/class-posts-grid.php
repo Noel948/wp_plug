@@ -93,6 +93,150 @@ class Posts_Grid extends Widget_Base
             ]
         );
 
+        $this->add_responsive_control(
+            'column_gap',
+            [
+                'label' => esc_html__('Column Gap', 'esnp-kit'),
+                'type' => Controls_Manager::SLIDER,
+                'size_units' => ['px', 'em', '%'],
+                'range' => [
+                    'px' => ['min' => 0, 'max' => 100],
+                ],
+                'default' => ['size' => 30, 'unit' => 'px'],
+                'selectors' => [
+                    '{{WRAPPER}} .esnp-posts-grid' => 'gap: {{SIZE}}{{UNIT}};',
+                ],
+            ]
+        );
+
+        $this->end_controls_section();
+
+        // Style Section
+        $this->start_controls_section(
+            'section_style_card',
+            [
+                'label' => esc_html__('Card', 'esnp-kit'),
+                'tab' => Controls_Manager::TAB_STYLE,
+            ]
+        );
+
+        $this->add_responsive_control(
+            'card_padding',
+            [
+                'label' => esc_html__('Padding', 'esnp-kit'),
+                'type' => Controls_Manager::DIMENSIONS,
+                'size_units' => ['px', '%', 'em'],
+                'selectors' => [
+                    '{{WRAPPER}} .esnp-post-content' => 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+                ],
+            ]
+        );
+
+        $this->add_group_control(
+            \Elementor\Group_Control_Background::get_type(),
+            [
+                'name' => 'card_background',
+                'label' => esc_html__('Background', 'esnp-kit'),
+                'types' => ['classic', 'gradient'],
+                'selector' => '{{WRAPPER}} .esnp-post-card',
+            ]
+        );
+
+        $this->add_group_control(
+            \Elementor\Group_Control_Border::get_type(),
+            [
+                'name' => 'card_border',
+                'label' => esc_html__('Border', 'esnp-kit'),
+                'selector' => '{{WRAPPER}} .esnp-post-card',
+            ]
+        );
+
+        $this->add_control(
+            'card_border_radius',
+            [
+                'label' => esc_html__('Border Radius', 'esnp-kit'),
+                'type' => Controls_Manager::DIMENSIONS,
+                'size_units' => ['px', '%'],
+                'selectors' => [
+                    '{{WRAPPER}} .esnp-post-card' => 'border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}}; overflow: hidden;',
+                ],
+            ]
+        );
+
+        $this->add_group_control(
+            \Elementor\Group_Control_Box_Shadow::get_type(),
+            [
+                'name' => 'card_shadow',
+                'selector' => '{{WRAPPER}} .esnp-post-card',
+            ]
+        );
+
+        $this->end_controls_section();
+
+        $this->start_controls_section(
+            'section_style_content',
+            [
+                'label' => esc_html__('Typography & Content', 'esnp-kit'),
+                'tab' => Controls_Manager::TAB_STYLE,
+            ]
+        );
+
+        $this->add_control(
+            'heading_title',
+            [
+                'label' => esc_html__('Title', 'esnp-kit'),
+                'type' => Controls_Manager::HEADING,
+                'separator' => 'before',
+            ]
+        );
+
+        $this->add_control(
+            'title_color',
+            [
+                'label' => esc_html__('Color', 'esnp-kit'),
+                'type' => Controls_Manager::COLOR,
+                'selectors' => [
+                    '{{WRAPPER}} .esnp-post-title a' => 'color: {{VALUE}};',
+                ],
+            ]
+        );
+
+        $this->add_group_control(
+            \Elementor\Group_Control_Typography::get_type(),
+            [
+                'name' => 'title_typography',
+                'selector' => '{{WRAPPER}} .esnp-post-title',
+            ]
+        );
+
+        $this->add_control(
+            'heading_excerpt',
+            [
+                'label' => esc_html__('Excerpt', 'esnp-kit'),
+                'type' => Controls_Manager::HEADING,
+                'separator' => 'before',
+            ]
+        );
+
+        $this->add_control(
+            'excerpt_color',
+            [
+                'label' => esc_html__('Color', 'esnp-kit'),
+                'type' => Controls_Manager::COLOR,
+                'selectors' => [
+                    '{{WRAPPER}} .esnp-post-excerpt' => 'color: {{VALUE}};',
+                ],
+            ]
+        );
+
+        $this->add_group_control(
+            \Elementor\Group_Control_Typography::get_type(),
+            [
+                'name' => 'excerpt_typography',
+                'selector' => '{{WRAPPER}} .esnp-post-excerpt',
+            ]
+        );
+
         $this->end_controls_section();
     }
 

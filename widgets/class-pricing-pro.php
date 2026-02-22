@@ -122,6 +122,56 @@ class Pricing_Pro extends Widget_Base
             ]
         );
 
+        $this->add_responsive_control(
+            'table_padding',
+            [
+                'label' => esc_html__('Padding', 'esnp-kit'),
+                'type' => Controls_Manager::DIMENSIONS,
+                'size_units' => ['px', '%', 'em'],
+                'selectors' => [
+                    '{{WRAPPER}} .esnp-pricing' => 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+                ],
+            ]
+        );
+
+        $this->add_group_control(
+            \Elementor\Group_Control_Border::get_type(),
+            [
+                'name' => 'table_border',
+                'label' => esc_html__('Border', 'esnp-kit'),
+                'selector' => '{{WRAPPER}} .esnp-pricing',
+            ]
+        );
+
+        $this->add_control(
+            'table_border_radius',
+            [
+                'label' => esc_html__('Border Radius', 'esnp-kit'),
+                'type' => Controls_Manager::DIMENSIONS,
+                'selectors' => [
+                    '{{WRAPPER}} .esnp-pricing' => 'border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}}; overflow: hidden;',
+                ],
+            ]
+        );
+
+        $this->add_group_control(
+            \Elementor\Group_Control_Box_Shadow::get_type(),
+            [
+                'name' => 'table_shadow',
+                'selector' => '{{WRAPPER}} .esnp-pricing',
+            ]
+        );
+
+        $this->end_controls_section();
+
+        $this->start_controls_section(
+            'section_pricing_style_header',
+            [
+                'label' => esc_html__('Header Style', 'esnp-kit'),
+                'tab' => Controls_Manager::TAB_STYLE,
+            ]
+        );
+
         $this->add_control(
             'header_bg',
             [
@@ -132,6 +182,55 @@ class Pricing_Pro extends Widget_Base
                 ],
             ]
         );
+
+        $this->add_group_control(
+            Group_Control_Typography::get_type(),
+            [
+                'name' => 'title_typography',
+                'label' => esc_html__('Title Typography', 'esnp-kit'),
+                'selector' => '{{WRAPPER}} .esnp-pricing__title',
+            ]
+        );
+
+        $this->add_group_control(
+            Group_Control_Typography::get_type(),
+            [
+                'name' => 'price_typography',
+                'label' => esc_html__('Price Typography', 'esnp-kit'),
+                'selector' => '{{WRAPPER}} .esnp-pricing__amount',
+            ]
+        );
+
+        $this->end_controls_section();
+
+        $this->start_controls_section(
+            'section_pricing_style_features',
+            [
+                'label' => esc_html__('Features Style', 'esnp-kit'),
+                'tab' => Controls_Manager::TAB_STYLE,
+            ]
+        );
+
+        $this->add_control(
+            'features_color',
+            [
+                'label' => esc_html__('Text Color', 'esnp-kit'),
+                'type' => Controls_Manager::COLOR,
+                'selectors' => [
+                    '{{WRAPPER}} .esnp-pricing__feature' => 'color: {{VALUE}};',
+                ],
+            ]
+        );
+
+        $this->add_group_control(
+            Group_Control_Typography::get_type(),
+            [
+                'name' => 'features_typography',
+                'selector' => '{{WRAPPER}} .esnp-pricing__feature',
+            ]
+        );
+
+        $this->end_controls_section();
 
         $this->end_controls_section();
     }

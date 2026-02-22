@@ -17,6 +17,122 @@
             this.initTOC();
             this.initProgress();
             this.initAlly();
+            this.initBooking();
+        },
+
+        initBooking: function () {
+            const containers = document.querySelectorAll('.esnp-booking-container');
+            containers.forEach(container => {
+                const grid = container.querySelector('.esnp-calendar-grid');
+                const monthDisplay = container.querySelector('.esnp-calendar-month');
+                const prevBtn = container.querySelector('.esnp-calendar-prev');
+                const nextBtn = container.querySelector('.esnp-calendar-next');
+                const slotWrapper = container.querySelector('.esnp-booking-slots-wrapper');
+                const formWrapper = container.querySelector('.esnp-booking-form');
+
+                let current = new Date();
+                let selectedDate = null;
+
+                const renderCalendar = () => {
+                    grid.innerHTML = '';
+                    const year = current.getFullYear();
+                    const month = current.getMonth();
+
+                    monthDisplay.innerText = new Intl.DateTimeFormat('en-US', { month: 'long', year: 'numeric' }).format(current);
+
+                    const firstDay = new Date(year, month, 1).getDay();
+                    const totalDays = new Date(year, month + 1, 0).getDate();
+
+                    // Day names
+                    ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].forEach(day => {
+                        const div = document.createElement('div');
+                        div.className = 'esnp-calendar-day-name';
+                        div.innerText = day;
+                        grid.appendChild(div);
+                    });
+
+                    // Empty slots
+                    for (let i = 0; i < firstDay; i++) {
+                        grid.appendChild(document.createElement('div'));
+                    }
+
+                    // Days
+                    for (let d = 1; d <= totalDays; d++) {
+                        const btn = document.createElement('div');
+                        btn.className = 'esnp-booking-day';
+                        btn.innerText = d;
+
+                        const dateStr = `${year}-${month + 1}-${d}`;
+                        const dateObj = new Date(year, month, d);
+
+                        if (dateObj < new Date().setHours(0, 0, 0, 0)) {
+                            btn.classList.add('esnp-is-disabled');
+                        } else {
+                            btn.addEventListener('click', () => {
+                                container.querySelectorAll('.esnp-booking-day').forEach(b => b.classList.remove('esnp-is-selected'));
+                                btn.classList.add('esnp-is-selected');
+                                selectedDate = dateStr;
+                                slotWrapper.style.display = 'block';
+                            });
+                        }
+                        grid.appendChild(btn);
+                    }
+                };
+
+                const submitBtn = container.querySelector('.esnp-booking-submit');
+                const messageDiv = container.querySelector('.esnp-booking-message');
+
+                submitBtn?.addEventListener('click', () => {
+                    const selectedSlot = container.querySelector('.esnp-booking-slot.esnp-is-selected');
+                    const name = container.querySelector('.esnp-booking-name').value;
+                    const email = container.querySelector('.esnp-booking-email').value;
+
+                    if (!selectedDate || !selectedSlot || !name || !email) {
+                        messageDiv.innerText = 'Please fill all fields.';
+                        messageDiv.style.color = 'red';
+                        return;
+                    }
+
+                    const formData = new FormData();
+                    formData.append('action', 'esnp_booking_submit');
+                    formData.append('date', selectedDate);
+                    formData.append('time', selectedSlot.dataset.time);
+                    formData.append('name', name);
+                    formData.append('email', email);
+
+                    submitBtn.innerText = 'Processing...';
+                    submitBtn.disabled = true;
+
+                    fetch(esnpData.ajaxUrl, {
+                        method: 'POST',
+                        body: formData
+                    })
+                        .then(res => res.json())
+                        .then(data => {
+                            if (data.success) {
+                                container.innerHTML = `<div class="esnp-booking-success">${data.data.message}</div>`;
+                            } else {
+                                messageDiv.innerText = data.data.message;
+                                messageDiv.style.color = 'red';
+                                submitBtn.innerText = 'Confirm Booking';
+                                submitBtn.disabled = false;
+                            }
+                        });
+                });
+
+                prevBtn?.addEventListener('click', () => { current.setMonth(current.getMonth() - 1); renderCalendar(); });
+                nextBtn?.addEventListener('click', () => { current.setMonth(current.getMonth() + 1); renderCalendar(); });
+
+                container.querySelectorAll('.esnp-booking-slot').forEach(slot => {
+                    slot.addEventListener('click', () => {
+                        container.querySelectorAll('.esnp-booking-slot').forEach(s => s.classList.remove('esnp-is-selected'));
+                        slot.classList.add('esnp-is-selected');
+                        formWrapper.style.display = 'flex';
+                    });
+                });
+
+                renderCalendar();
+            });
         },
 
         initAlly: function () {
